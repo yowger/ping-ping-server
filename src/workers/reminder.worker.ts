@@ -5,7 +5,7 @@ import { redisConnection } from "../config/redis.config"
 export const reminderWorker = new Worker(
     "send-reminder",
     async (job) => {
-        console.log(job)
+        console.log(`Sending reminder for job ${job.id} with data:`, job.data)
     },
     {
         connection: redisConnection as any,
