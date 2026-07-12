@@ -11,6 +11,8 @@ class ReminderService {
             delay,
         })
 
+        console.log("job counts:", await reminderQueue.getJobCounts())
+
         return job
     }
 }

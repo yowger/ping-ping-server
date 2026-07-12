@@ -3,14 +3,21 @@ import { Worker } from "bullmq"
 import { redisConnection } from "../config/redis.config"
 
 export const reminderWorker = new Worker(
-    "send-reminder",
+    "reminders",
     async (job) => {
-        console.log(`Sending reminder for job ${job.id} with data:`, job.data)
+        console.log(
+            `${job.name}: Sending reminder for job ${job.id} with data:`,
+            job.data,
+        )
     },
     {
         connection: redisConnection as any,
     },
 )
+
+reminderWorker.on("ready", () => {
+    console.log("Worker ready")
+})
 
 reminderWorker.on("completed", (job) => {
     console.log(`Job ${job.id} has completed!`)
@@ -18,6 +25,10 @@ reminderWorker.on("completed", (job) => {
 
 reminderWorker.on("failed", (job, err) => {
     console.log(`Job ${job?.id} has failed with ${err.message}`)
+})
+
+reminderWorker.on("error", (err) => {
+    console.error(err)
 })
 
 const gracefulShutdown = async (signal: string) => {
