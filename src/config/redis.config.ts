@@ -2,15 +2,17 @@ import Redis from "ioredis"
 
 import { env } from "./env.config"
 
-export const connection = new Redis({
+export const redisConnection = new Redis({
     host: env.REDIS_HOST,
     port: env.REDIS_PORT,
+    maxRetriesPerRequest: null,
+    enableReadyCheck: false,
 })
 
-connection.on("connect", () => {
+redisConnection.on("connect", () => {
     console.log("Redis connected")
 })
 
-connection.on("error", (err) => {
+redisConnection.on("error", (err) => {
     console.error("Redis error:", err)
 })

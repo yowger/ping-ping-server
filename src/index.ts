@@ -1,4 +1,5 @@
-import { connection } from "./config/redis.config"
+import { reminderQueue } from "./queues/reminder.queue"
 
-console.log("ping-ping")
-console.log("🚀 ~  connection:", connection)
+reminderQueue.add("reminders", {
+    title: "Hello World",
+})
