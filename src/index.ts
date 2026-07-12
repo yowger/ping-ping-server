@@ -1,5 +1,14 @@
-import { reminderQueue } from "./queues/reminder.queue"
+import { app } from "./app"
+import { env } from "./config/env.config"
 
-reminderQueue.add("reminders", {
-    title: "Hello World",
+const server = app.listen(env.PORT, () => {
+    console.log(`Server listening on port ${env.PORT}`)
+})
+
+process.on("SIGINT", () => {
+    server.close(() => process.exit(0))
+})
+
+process.on("SIGTERM", () => {
+    server.close(() => process.exit(0))
 })

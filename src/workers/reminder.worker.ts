@@ -1,4 +1,5 @@
 import { Worker } from "bullmq"
+
 import { redisConnection } from "../config/redis.config"
 
 export const reminderWorker = new Worker(
