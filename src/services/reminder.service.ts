@@ -27,6 +27,42 @@ class ReminderService {
 
         return jobId
     }
+
+    async getById(jobId: string) {
+        const job = await reminderQueue.getJob(jobId)
+
+        if (!job) {
+            throw new Error("Reminder not found.")
+        }
+
+        return job
+    }
+
+    async getAll() {
+        return reminderQueue.getJobs([
+            "waiting",
+            "delayed",
+            "active",
+            "completed",
+            "failed",
+        ])
+    }
+
+    async update(jobId: string, data: CreateReminderDto) {
+        const job = await reminderQueue.getJob(jobId)
+
+        if (!job) {
+            throw new Error("Reminder not found.")
+        }
+
+        await job.remove()
+
+        const delay = getDelayUntil(data.scheduledAt)
+
+        return reminderQueue.add("send-reminder", data, {
+            delay,
+        })
+    }
 }
 
 export const reminderService = new ReminderService()
