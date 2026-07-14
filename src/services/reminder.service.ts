@@ -11,9 +11,21 @@ class ReminderService {
             delay,
         })
 
-        console.log("job counts:", await reminderQueue.getJobCounts())
+        // console.log("job counts:", await reminderQueue.getJobCounts())
 
         return job
+    }
+
+    async delete(jobId: string) {
+        const job = await reminderQueue.getJob(jobId)
+
+        if (!job) {
+            throw new Error("Reminder not found.")
+        }
+
+        await job.remove()
+
+        return jobId
     }
 }
 

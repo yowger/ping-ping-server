@@ -8,3 +8,9 @@ export const createReminderSchema = z.object({
 })
 
 export type CreateReminderDto = z.infer<typeof createReminderSchema>
+
+export const deleteReminderSchema = z.object({
+    id: z.string().min(1),
+})
+
+export type DeleteReminderParams = z.infer<typeof deleteReminderSchema>

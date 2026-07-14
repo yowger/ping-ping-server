@@ -1,11 +1,14 @@
-import { ZodObject, ZodError } from "zod"
+import { ZodTypeAny, ZodError } from "zod"
 import { Request, Response, NextFunction } from "express"
 
+type ValidationTarget = "body" | "params" | "query"
+
 export const validate =
-    (schema: ZodObject) =>
+    (schema: ZodTypeAny, target: ValidationTarget = "body") =>
     (req: Request, res: Response, next: NextFunction) => {
         try {
-            req.body = schema.parse(req.body)
+            req[target] = schema.parse(req[target])
+
             next()
         } catch (error) {
             if (error instanceof ZodError) {
