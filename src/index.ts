@@ -1,14 +1,21 @@
 import { app } from "./app"
+import { connectDiscord } from "./config/discord.config"
 import { env } from "./config/env.config"
 
-const server = app.listen(env.PORT, () => {
-    console.log(`Server listening on port ${env.PORT}`)
-})
+async function bootstrap() {
+    await connectDiscord()
 
-process.on("SIGINT", () => {
-    server.close(() => process.exit(0))
-})
+    const server = app.listen(env.PORT, () => {
+        console.log(`Server listening on port ${env.PORT}`)
+    })
 
-process.on("SIGTERM", () => {
-    server.close(() => process.exit(0))
-})
+    process.on("SIGINT", () => {
+        server.close(() => process.exit(0))
+    })
+
+    process.on("SIGTERM", () => {
+        server.close(() => process.exit(0))
+    })
+}
+
+bootstrap()
