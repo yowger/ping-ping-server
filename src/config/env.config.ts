@@ -7,4 +7,6 @@ export const env = {
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: Number(process.env.REDIS_PORT),
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
+    DISCORD_APP_ID: process.env.DISCORD_APP_ID,
+    DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
 }
