@@ -61,6 +61,10 @@ class ReminderService {
 
         return reminderQueue.add("send-reminder", data, {
             delay,
+            removeOnComplete: 100,
+            removeOnFail: 100,
+            // removeOnComplete: true,
+            // removeOnFail: true,
         })
     }
 }
