@@ -4,8 +4,6 @@ import {
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
-    OAuth2Scopes,
-    PermissionFlagsBits,
     TextChannel,
 } from "discord.js"
 
@@ -17,6 +15,11 @@ import {
     DiscordTokenResponse,
     DiscordUserResponse,
 } from "../dto/discord.response"
+import {
+    DISCORD_API_URL,
+    DISCORD_BOT_PERMISSIONS,
+    DISCORD_OAUTH_SCOPES,
+} from "../constants/discord.constants"
 
 interface SendDiscordMessageOptions {
     channelId: string
@@ -88,27 +91,15 @@ export class DiscordService {
     }
 
     generateInviteUrl() {
-        const permissions =
-            PermissionFlagsBits.ViewChannel |
-            PermissionFlagsBits.SendMessages |
-            PermissionFlagsBits.AttachFiles |
-            PermissionFlagsBits.EmbedLinks
-
-        const scope = [
-            OAuth2Scopes.Bot,
-            OAuth2Scopes.Identify,
-            OAuth2Scopes.Guilds,
-        ].join(" ")
-
         const params = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
-            scope,
-            permissions: permissions.toString(),
+            scope: DISCORD_OAUTH_SCOPES,
+            permissions: DISCORD_BOT_PERMISSIONS.toString(),
             redirect_uri: env.DISCORD_REDIRECT_URI!,
             response_type: "code",
         })
 
-        return `https://discord.com/oauth2/authorize?${params.toString()}`
+        return `${DISCORD_API_URL}/oauth2/authorize?${params.toString()}`
     }
 
     async exchangeAuthorizationCode(
@@ -122,7 +113,7 @@ export class DiscordService {
             redirect_uri: env.DISCORD_REDIRECT_URI!,
         })
 
-        const response = await fetch("https://discord.com/api/oauth2/token", {
+        const response = await fetch(`${DISCORD_API_URL}/oauth2/token`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -138,7 +129,7 @@ export class DiscordService {
     }
 
     async getCurrentUser(accessToken: string): Promise<DiscordUserResponse> {
-        const response = await fetch("https://discord.com/api/users/@me", {
+        const response = await fetch(`${DISCORD_API_URL}/users/@me`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -152,14 +143,11 @@ export class DiscordService {
     }
 
     async getUserGuilds(accessToken: string): Promise<DiscordGuildResponse[]> {
-        const response = await fetch(
-            "https://discord.com/api/users/@me/guilds",
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
+        const response = await fetch(`${DISCORD_API_URL}/users/@me/guilds`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
             },
-        )
+        })
 
         if (!response.ok) {
             throw new Error("Failed to fetch guilds.")
@@ -173,7 +161,7 @@ export class DiscordService {
         guildId: string,
     ): Promise<DiscordChannelResponse[]> {
         const response = await fetch(
-            `https://discord.com/api/guilds/${guildId}/channels`,
+            `${DISCORD_API_URL}/guilds/${guildId}/channels`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
