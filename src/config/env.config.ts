@@ -9,4 +9,5 @@ export const env = {
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
     DISCORD_APP_ID: process.env.DISCORD_APP_ID,
     DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
 }

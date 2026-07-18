@@ -11,18 +11,22 @@ import {
 
 import { discordClient } from "../config/discord.config"
 import { env } from "../config/env.config"
+import {
+    DiscordChannelResponse,
+    DiscordGuildResponse,
+    DiscordTokenResponse,
+    DiscordUserResponse,
+} from "../dto/discord.response"
 
 interface SendDiscordMessageOptions {
     channelId: string
     message?: string
     filePaths?: string[]
-
     embed?: {
         title?: string
         description?: string
         color?: number
     }
-
     buttons?: "confirmation"
 }
 
@@ -90,19 +94,102 @@ export class DiscordService {
             PermissionFlagsBits.AttachFiles |
             PermissionFlagsBits.EmbedLinks
 
+        const scope = [
+            OAuth2Scopes.Bot,
+            OAuth2Scopes.Identify,
+            OAuth2Scopes.Guilds,
+        ].join(" ")
+
         const params = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
-            scope: [
-                OAuth2Scopes.Bot,
-                OAuth2Scopes.Identify,
-                OAuth2Scopes.Guilds,
-            ].join(" "),
+            scope,
             permissions: permissions.toString(),
-            // redirect_uri: env.DISCORD_REDIRECT_URI!,
-            // response_type: "code",
+            redirect_uri: env.DISCORD_REDIRECT_URI!,
+            response_type: "code",
         })
 
         return `https://discord.com/oauth2/authorize?${params.toString()}`
+    }
+
+    async exchangeAuthorizationCode(
+        code: string,
+    ): Promise<DiscordTokenResponse> {
+        const body = new URLSearchParams({
+            client_id: env.DISCORD_APP_ID!,
+            client_secret: env.DISCORD_CLIENT_SECRET!,
+            grant_type: "authorization_code",
+            code,
+            redirect_uri: env.DISCORD_REDIRECT_URI!,
+        })
+
+        const response = await fetch("https://discord.com/api/oauth2/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body,
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to exchange authorization code.")
+        }
+
+        return (await response.json()) as DiscordTokenResponse
+    }
+
+    async getCurrentUser(accessToken: string): Promise<DiscordUserResponse> {
+        const response = await fetch("https://discord.com/api/users/@me", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch current user.")
+        }
+
+        return (await response.json()) as DiscordUserResponse
+    }
+
+    async getUserGuilds(accessToken: string): Promise<DiscordGuildResponse[]> {
+        const response = await fetch(
+            "https://discord.com/api/users/@me/guilds",
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        )
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch guilds.")
+        }
+
+        return (await response.json()) as DiscordGuildResponse[]
+    }
+
+    async getGuildChannels(
+        accessToken: string,
+        guildId: string,
+    ): Promise<DiscordChannelResponse[]> {
+        const response = await fetch(
+            `https://discord.com/api/guilds/${guildId}/channels`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        )
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch channels.")
+        }
+
+        return (await response.json()) as DiscordChannelResponse[]
+    }
+
+    async revokeConnection(accessToken: string) {
+        // todo
     }
 }
 

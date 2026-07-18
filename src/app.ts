@@ -4,7 +4,7 @@ import morgan from "morgan"
 import helmet from "helmet"
 
 import reminderRoutes from "./routes/reminder.routes"
-// import { discordService } from "./services/discord.service"
+import { discordService } from "./services/discord.service"
 
 const app = express()
 
@@ -14,7 +14,6 @@ app.use(helmet())
 app.use(morgan("dev"))
 
 app.use("/api/reminders", reminderRoutes)
-
 
 // app.post("/api/discord/test", async (req, res) => {
 //     // const { channelId, message } = req.body
@@ -45,10 +44,24 @@ app.use("/api/reminders", reminderRoutes)
 //     }
 // })
 
-// app.get("/api/discord/invite", (req, res) => {
-//     res.json({
-//         url: discordService.generateInviteUrl(),
-//     })
-// })
+app.get("/api/discord/invite", (req, res) => {
+    res.json({
+        url: discordService.generateInviteUrl(),
+    })
+})
+
+app.get("/api/discord/callback", async (req, res) => {
+    const code = req.query.code
+
+    if (typeof code !== "string") {
+        return res.status(400).json({
+            error: "Missing authorization code.",
+        })
+    }
+
+    // await discordService.handleOAuthCallback(code)
+
+    res.send("Discord connected!")
+})
 
 export { app }

@@ -7,7 +7,7 @@ import type {
     DeleteReminderParams,
     GetReminderParams,
     UpdateReminderDto,
-} from "../schemas/reminder.schema"
+} from "../dto/reminder.dto"
 
 class ReminderController {
     async create(req: Request<{}, {}, CreateReminderDto>, res: Response) {

@@ -1,7 +1,6 @@
 import { getDelayUntil } from "../utils/date.utils"
 import { reminderQueue } from "../queues/reminder.queue"
-
-import type { CreateReminderDto } from "../schemas/reminder.schema"
+import { CreateReminderDto } from "../dto/reminder.dto"
 
 class ReminderService {
     async create(data: CreateReminderDto) {
@@ -70,4 +69,3 @@ class ReminderService {
 }
 
 export const reminderService = new ReminderService()
-
