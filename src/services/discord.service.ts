@@ -85,11 +85,18 @@ export class DiscordService {
 
     generateInviteUrl() {
         const permissions =
-            PermissionFlagsBits.ViewChannel | PermissionFlagsBits.SendMessages
+            PermissionFlagsBits.ViewChannel |
+            PermissionFlagsBits.SendMessages |
+            PermissionFlagsBits.AttachFiles |
+            PermissionFlagsBits.EmbedLinks
 
         const params = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
-            scope: [OAuth2Scopes.Bot].join(" "),
+            scope: [
+                OAuth2Scopes.Bot,
+                OAuth2Scopes.Identify,
+                OAuth2Scopes.Guilds,
+            ].join(" "),
             permissions: permissions.toString(),
             // redirect_uri: env.DISCORD_REDIRECT_URI!,
             // response_type: "code",
