@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:3000/api
+@accessToken = 
+@guildId = 
+@channelId = 
+
+### ========================================
+### Discord - Get Invite URL
+### ========================================
+
+GET {{baseUrl}}/discord/invite
+
+### ========================================
+### Discord - OAuth Callback
+### Copy the "code" parameter from Discord's redirect URL.
+### Example:
+### http://localhost:3000/api/discord/callback?code=XXXXXXXX
+### ========================================
+
+GET {{baseUrl}}/discord/callback?code=AUTHORIZATION_CODE_HERE
+
+### ========================================
+### Discord - Current User
+### ========================================
+
+GET {{baseUrl}}/discord/me
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### Discord - User Guilds
+### ========================================
+
+GET {{baseUrl}}/discord/guilds
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### Discord - Guild Channels
+### ========================================
+
+GET {{baseUrl}}/discord/guilds/{{guildId}}/channels
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### Discord - Send Message to Channel
+### ========================================
+
+### ========================================
+### Discord - Send Text Message
+### ========================================
+
+POST {{baseUrl}}/discord/send
+Content-Type: application/json
+
+{
+    "channelId": "{{channelId}}",
+    "message": "Hello from VS Code!"
+}
+
+### ========================================
+### Discord - Send Embed
+### ========================================
+
+POST {{baseUrl}}/discord/send
+Content-Type: application/json
+
+{
+    "channelId": "{{channelId}}",
+    "message": "Here's an embed!",
+    "embed": {
+        "title": "PingPing",
+        "description": "Reminder completed!",
+        "color": 3447003
+    }
+}
+
+### ========================================
+### Discord - Send Confirmation Buttons
+### ========================================
+
+POST {{baseUrl}}/discord/send
+Content-Type: application/json
+
+{
+    "channelId": "{{channelId}}",
+    "message": "Did you finish your workout?",
+    "buttons": "confirmation"
+}

@@ -3,23 +3,11 @@ import {
     AttachmentBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ChannelType,
     EmbedBuilder,
     TextChannel,
 } from "discord.js"
 
 import { discordClient } from "../config/discord.config"
-import { env } from "../config/env.config"
-import {
-    DiscordGuildDto,
-    DiscordTokenDto,
-    DiscordUserDto,
-} from "../dto/discord-oauth.dto"
-import {
-    DISCORD_API_URL,
-    DISCORD_BOT_PERMISSIONS,
-    DISCORD_OAUTH_SCOPES,
-} from "../constants/discord-oauth.constants"
 
 interface SendDiscordMessageOptions {
     channelId: string

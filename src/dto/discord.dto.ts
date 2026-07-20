@@ -4,7 +4,8 @@ import {
     connectDiscordSchema,
     discordCallbackSchema,
     getGuildChannelsSchema,
-} from "../schemas/discord-oauth.schema"
+    sendDiscordMessageSchema,
+} from "../schemas/discord.schema"
 
 export type DiscordCallbackQuery = z.infer<typeof discordCallbackSchema>
 
@@ -44,3 +45,5 @@ export interface DiscordChannelDto {
     type: number
     position: number
 }
+
+export type SendDiscordMessageDto = z.infer<typeof sendDiscordMessageSchema>

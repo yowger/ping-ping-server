@@ -6,7 +6,7 @@ import {
     DiscordGuildDto,
     DiscordTokenDto,
     DiscordUserDto,
-} from "../dto/discord-oauth.dto"
+} from "../dto/discord.dto"
 import {
     DISCORD_API_URL,
     DISCORD_BOT_PERMISSIONS,

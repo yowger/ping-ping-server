@@ -4,7 +4,7 @@ import morgan from "morgan"
 import helmet from "helmet"
 
 import reminderRoutes from "./routes/reminder.routes"
-import discordRoutes from "./routes/discord-oauth.routes"
+import discordRoutes from "./routes/discord.routes"
 
 const app = express()
 
