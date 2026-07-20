@@ -34,6 +34,8 @@ interface SendDiscordMessageOptions {
 }
 
 export class DiscordService {
+    private guildText = 0
+
     async send({
         channelId,
         message,
@@ -154,24 +156,22 @@ export class DiscordService {
         return (await response.json()) as DiscordGuildDto[]
     }
 
-    async getGuildChannels(
-        accessToken: string,
-        guildId: string,
-    ): Promise<DiscordChannelDto[]> {
-        const response = await fetch(
-            `${DISCORD_API_URL}/guilds/${guildId}/channels`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            },
-        )
+    async getGuildChannels(guildId: string) {
+        const guild = await discordClient.guilds.fetch(guildId)
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch channels.")
-        }
+        const channels = await guild.channels.fetch()
 
-        return (await response.json()) as DiscordChannelDto[]
+        return channels
+            .filter(
+                (channel) =>
+                    channel &&
+                    channel.isTextBased() &&
+                    channel.type === this.guildText,
+            )
+            .map((channel) => ({
+                id: channel!.id,
+                name: channel!.name,
+            }))
     }
 
     async revokeConnection(accessToken: string) {

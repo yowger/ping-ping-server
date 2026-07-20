@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 
 import { discordService } from "../services/discord.service"
+import { getAccessToken } from "../utils/http.utils"
 
 export class DiscordController {
     getInviteUrl(req: Request, res: Response) {
@@ -27,7 +28,7 @@ export class DiscordController {
         req: Request<{}, {}, { accessToken: string }>,
         res: Response,
     ) {
-        const accessToken = this.getAccessToken(req)
+        const accessToken = getAccessToken(req)
 
         const user = await discordService.getCurrentUser(accessToken)
 
@@ -38,7 +39,7 @@ export class DiscordController {
         req: Request<{}, {}, { accessToken: string }>,
         res: Response,
     ) {
-        const accessToken = this.getAccessToken(req)
+        const accessToken = getAccessToken(req)
 
         const guilds = await discordService.getUserGuilds(accessToken)
 
@@ -46,25 +47,11 @@ export class DiscordController {
     }
 
     async getChannels(req: Request<{ guildId: string }>, res: Response) {
-        const accessToken = this.getAccessToken(req)
         const { guildId } = req.params
 
-        const channels = await discordService.getGuildChannels(
-            accessToken,
-            guildId,
-        )
+        const channels = await discordService.getGuildChannels(guildId)
 
         return res.json(channels)
-    }
-
-    private getAccessToken(req: Request) {
-        const accessToken = req.headers.authorization?.replace("Bearer ", "")
-
-        if (!accessToken) {
-            throw new Error("Missing access token.")
-        }
-
-        return accessToken
     }
 }
 
