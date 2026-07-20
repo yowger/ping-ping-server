@@ -23,7 +23,10 @@ export class DiscordController {
         return res.json(token)
     }
 
-    async getCurrentUser(req: Request, res: Response) {
+    async getCurrentUser(
+        req: Request<{}, {}, { accessToken: string }>,
+        res: Response,
+    ) {
         const accessToken = this.getAccessToken(req)
 
         const user = await discordService.getCurrentUser(accessToken)
@@ -31,7 +34,10 @@ export class DiscordController {
         return res.json(user)
     }
 
-    async getGuilds(req: Request, res: Response) {
+    async getGuilds(
+        req: Request<{}, {}, { accessToken: string }>,
+        res: Response,
+    ) {
         const accessToken = this.getAccessToken(req)
 
         const guilds = await discordService.getUserGuilds(accessToken)
@@ -39,9 +45,9 @@ export class DiscordController {
         return res.json(guilds)
     }
 
-    async getChannels(req: Request, res: Response) {
+    async getChannels(req: Request<{ guildId: string }>, res: Response) {
         const accessToken = this.getAccessToken(req)
-        const { guildId } = req.params as { guildId: string }
+        const { guildId } = req.params
 
         const channels = await discordService.getGuildChannels(
             accessToken,
