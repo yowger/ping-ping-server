@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 
-import { discordService } from "../services/discord.service"
+import { discordService } from "../services/discord-oauth.service"
 import { getAccessToken } from "../utils/http.utils"
 
-export class DiscordController {
+export class DiscordOAuthController {
     getInviteUrl(req: Request, res: Response) {
         const url = discordService.generateInviteUrl()
 
@@ -55,5 +55,5 @@ export class DiscordController {
     }
 }
 
-export const discordController = new DiscordController()
+export const discordController = new DiscordOAuthController()
 

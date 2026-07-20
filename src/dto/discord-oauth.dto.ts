@@ -4,7 +4,7 @@ import {
     connectDiscordSchema,
     discordCallbackSchema,
     getGuildChannelsSchema,
-} from "../schemas/discord.schema"
+} from "../schemas/discord-oauth.schema"
 
 export type DiscordCallbackQuery = z.infer<typeof discordCallbackSchema>
 
