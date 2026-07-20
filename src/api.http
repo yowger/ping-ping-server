@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000/api
-@accessToken = 
-@guildId = 
+@accessToken = MTUyNjk4MTEzMjMxNzYyMjM5Mw.ZvOrFVcvnkzDmYCYPWc5ekkmpFaOqA
+@guildId = 1526984363240194169
 
 ### ========================================
 ### Discord - Get Invite URL

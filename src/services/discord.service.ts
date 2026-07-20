@@ -3,6 +3,7 @@ import {
     AttachmentBuilder,
     ButtonBuilder,
     ButtonStyle,
+    ChannelType,
     EmbedBuilder,
     TextChannel,
 } from "discord.js"
@@ -34,8 +35,6 @@ interface SendDiscordMessageOptions {
 }
 
 export class DiscordService {
-    private guildText = 0
-
     async send({
         channelId,
         message,
@@ -166,12 +165,35 @@ export class DiscordService {
                 (channel) =>
                     channel &&
                     channel.isTextBased() &&
-                    channel.type === this.guildText,
+                    channel.type === ChannelType.GuildText,
             )
             .map((channel) => ({
                 id: channel!.id,
                 name: channel!.name,
             }))
+    }
+
+    async refreshAccessToken(refreshToken: string): Promise<DiscordTokenDto> {
+        const body = new URLSearchParams({
+            client_id: env.DISCORD_APP_ID!,
+            client_secret: env.DISCORD_CLIENT_SECRET!,
+            grant_type: "refresh_token",
+            refresh_token: refreshToken,
+        })
+
+        const response = await fetch(`${DISCORD_API_URL}/oauth2/token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body,
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to refresh Discord access token.")
+        }
+
+        return (await response.json()) as DiscordTokenDto
     }
 
     async revokeConnection(accessToken: string) {
@@ -180,3 +202,5 @@ export class DiscordService {
 }
 
 export const discordService = new DiscordService()
+
+// todo save: accessToken, refreshToken, expiresAt, discordUserId for each individual user in the database
