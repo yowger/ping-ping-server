@@ -2,6 +2,8 @@ import { Router } from "express"
 
 import { discordOAuthController } from "../controllers/discord-oauth.controller"
 import { discordController } from "../controllers/discord.controller"
+import { validate } from "../middleware/validate.middleware"
+import { sendDiscordMessageSchema } from "../schemas/discord.schema"
 
 const router = Router()
 
@@ -15,6 +17,6 @@ router.get("/guilds", discordOAuthController.getGuilds)
 
 router.get("/guilds/:guildId/channels", discordOAuthController.getChannels)
 
-router.post("/send", discordController.send)
+router.post("/send", validate(sendDiscordMessageSchema), discordController.send)
 
 export default router
