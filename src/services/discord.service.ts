@@ -204,3 +204,4 @@ export class DiscordService {
 export const discordService = new DiscordService()
 
 // todo save: accessToken, refreshToken, expiresAt, discordUserId for each individual user in the database
+// todo: add database and refactor whole
