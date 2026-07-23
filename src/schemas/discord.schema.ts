@@ -26,3 +26,7 @@ export const sendDiscordMessageSchema = z.object({
         .optional(),
     buttons: z.enum(["confirmation"]).optional(),
 })
+
+export const authorizationHeaderSchema = z.object({
+    authorization: z.string().startsWith("Bearer "),
+})

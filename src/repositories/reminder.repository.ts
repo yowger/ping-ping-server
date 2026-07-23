@@ -2,10 +2,11 @@ import { eq } from "drizzle-orm"
 
 import { db } from "../config/db.config"
 import { reminders } from "../database/schemas/reminder.schema"
-import { CreateReminderQueueDto } from "../dto/reminder-queue.dto"
+
+import type { Reminder, ReminderInput } from "../types/reminder-repository.types"
 
 class ReminderRepository {
-    async create(data: CreateReminderQueueDto) {
+    async create(data: ReminderInput): Promise<Reminder> {
         const [reminder] = await db
             .insert(reminders)
             .values({
@@ -19,7 +20,7 @@ class ReminderRepository {
         return reminder
     }
 
-    async getById(id: string) {
+    async getById(id: string): Promise<Reminder | undefined> {
         const [reminder] = await db
             .select()
             .from(reminders)
@@ -28,11 +29,14 @@ class ReminderRepository {
         return reminder
     }
 
-    async findAll() {
+    async findAll(): Promise<Reminder[]> {
         return db.select().from(reminders)
     }
 
-    async update(id: string, data: CreateReminderQueueDto) {
+    async update(
+        id: string,
+        data: ReminderInput,
+    ): Promise<Reminder | undefined> {
         const [reminder] = await db
             .update(reminders)
             .set({
@@ -48,9 +52,25 @@ class ReminderRepository {
         return reminder
     }
 
-    async delete(id: string) {
+    async delete(id: string): Promise<Reminder | undefined> {
         const [reminder] = await db
             .delete(reminders)
+            .where(eq(reminders.id, id))
+            .returning()
+
+        return reminder
+    }
+
+    async updateBullJobId(
+        id: string,
+        bullJobId: string,
+    ): Promise<Reminder | undefined> {
+        const [reminder] = await db
+            .update(reminders)
+            .set({
+                bullJobId,
+                updatedAt: new Date(),
+            })
             .where(eq(reminders.id, id))
             .returning()
 

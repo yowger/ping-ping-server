@@ -3,18 +3,20 @@ import { ChannelType } from "discord.js"
 import { discordClient } from "../config/discord.config"
 import { env } from "../config/env.config"
 import {
-    DiscordGuildDto,
-    DiscordTokenDto,
-    DiscordUserDto,
-} from "../dto/discord.dto"
-import {
     DISCORD_API_URL,
     DISCORD_BOT_PERMISSIONS,
     DISCORD_OAUTH_SCOPES,
 } from "../constants/discord-oauth.constants"
 
+import type {
+    DiscordGuild,
+    DiscordToken,
+    DiscordUser,
+    GuildChannel,
+} from "../types/discord.types"
+
 export class DiscordOAuthService {
-    generateInviteUrl() {
+    generateInviteUrl(): string {
         const params = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
             scope: DISCORD_OAUTH_SCOPES,
@@ -26,7 +28,7 @@ export class DiscordOAuthService {
         return `${DISCORD_API_URL}/oauth2/authorize?${params.toString()}`
     }
 
-    async exchangeAuthorizationCode(code: string): Promise<DiscordTokenDto> {
+    async exchangeAuthorizationCode(code: string): Promise<DiscordToken> {
         const body = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
             client_secret: env.DISCORD_CLIENT_SECRET!,
@@ -47,10 +49,10 @@ export class DiscordOAuthService {
             throw new Error("Failed to exchange authorization code.")
         }
 
-        return (await response.json()) as DiscordTokenDto
+        return await response.json()
     }
 
-    async getCurrentUser(accessToken: string): Promise<DiscordUserDto> {
+    async getCurrentUser(accessToken: string): Promise<DiscordUser> {
         const response = await fetch(`${DISCORD_API_URL}/users/@me`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -61,10 +63,10 @@ export class DiscordOAuthService {
             throw new Error("Failed to fetch current user.")
         }
 
-        return (await response.json()) as DiscordUserDto
+        return await response.json()
     }
 
-    async getUserGuilds(accessToken: string): Promise<DiscordGuildDto[]> {
+    async getUserGuilds(accessToken: string): Promise<DiscordGuild[]> {
         const response = await fetch(`${DISCORD_API_URL}/users/@me/guilds`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -75,10 +77,10 @@ export class DiscordOAuthService {
             throw new Error("Failed to fetch guilds.")
         }
 
-        return (await response.json()) as DiscordGuildDto[]
+        return await response.json()
     }
 
-    async getGuildChannels(guildId: string) {
+    async getGuildChannels(guildId: string): Promise<GuildChannel[]> {
         const guild = await discordClient.guilds.fetch(guildId)
 
         const channels = await guild.channels.fetch()
@@ -96,7 +98,7 @@ export class DiscordOAuthService {
             }))
     }
 
-    async refreshAccessToken(refreshToken: string): Promise<DiscordTokenDto> {
+    async refreshAccessToken(refreshToken: string): Promise<DiscordToken> {
         const body = new URLSearchParams({
             client_id: env.DISCORD_APP_ID!,
             client_secret: env.DISCORD_CLIENT_SECRET!,
@@ -116,15 +118,15 @@ export class DiscordOAuthService {
             throw new Error("Failed to refresh Discord access token.")
         }
 
-        return (await response.json()) as DiscordTokenDto
+        return await response.json()
     }
 
-    async revokeConnection(accessToken: string) {
+    async revokeConnection(accessToken: string): Promise<void> {
         // todo
     }
 }
 
-export const discordService = new DiscordOAuthService()
+export const discordOAuthService = new DiscordOAuthService()
 
 // todo save: accessToken, refreshToken, expiresAt, discordUserId for each individual user in the database
 // todo: add database and refactor whole

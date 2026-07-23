@@ -3,19 +3,40 @@ import { Router } from "express"
 import { discordOAuthController } from "../controllers/discord-oauth.controller"
 import { discordController } from "../controllers/discord.controller"
 import { validate } from "../middleware/validate.middleware"
-import { sendDiscordMessageSchema } from "../schemas/discord.schema"
+import {
+    authorizationHeaderSchema,
+    discordCallbackSchema,
+    getGuildChannelsSchema,
+    sendDiscordMessageSchema,
+} from "../schemas/discord.schema"
 
 const router = Router()
 
 router.get("/invite", discordOAuthController.getInviteUrl)
 
-router.get("/callback", discordOAuthController.callback)
+router.get(
+    "/callback",
+    validate(discordCallbackSchema, "query"),
+    discordOAuthController.callback,
+)
 
-router.get("/me", discordOAuthController.getCurrentUser)
+router.get(
+    "/me",
+    validate(authorizationHeaderSchema, "headers"),
+    discordOAuthController.getCurrentUser,
+)
 
-router.get("/guilds", discordOAuthController.getGuilds)
+router.get(
+    "/guilds",
+    validate(authorizationHeaderSchema, "headers"),
+    discordOAuthController.getGuilds,
+)
 
-router.get("/guilds/:guildId/channels", discordOAuthController.getChannels)
+router.get(
+    "/guilds/:guildId/channels",
+    validate(getGuildChannelsSchema, "params"),
+    discordOAuthController.getChannels,
+)
 
 router.post("/send", validate(sendDiscordMessageSchema), discordController.send)
 

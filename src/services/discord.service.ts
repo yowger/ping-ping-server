@@ -9,17 +9,10 @@ import {
 
 import { discordClient } from "../config/discord.config"
 
-interface SendDiscordMessageOptions {
-    channelId: string
-    message?: string
-    filePaths?: string[]
-    embed?: {
-        title?: string
-        description?: string
-        color?: number
-    }
-    buttons?: "confirmation"
-}
+import type {
+    DiscordMessage,
+    SendDiscordMessageInput,
+} from "../types/discord.types"
 
 export class DiscordService {
     async send({
@@ -28,7 +21,7 @@ export class DiscordService {
         filePaths,
         embed,
         buttons,
-    }: SendDiscordMessageOptions) {
+    }: SendDiscordMessageInput): Promise<DiscordMessage> {
         const channel = await discordClient.channels.fetch(channelId)
 
         if (!channel) {
@@ -70,7 +63,7 @@ export class DiscordService {
             ]
         }
 
-        await (channel as TextChannel).send({
+        return (channel as TextChannel).send({
             content: message,
             files,
             embeds,

@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
 
 export const reminders = pgTable("reminders", {
     id: uuid().defaultRandom().primaryKey(),
+    bullJobId: text(),
     title: text().notNull(),
     message: text().notNull(),
     scheduledAt: timestamp().notNull(),

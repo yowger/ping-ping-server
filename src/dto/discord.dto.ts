@@ -1,49 +1,40 @@
 import { z } from "zod"
 
 import {
-    connectDiscordSchema,
     discordCallbackSchema,
     getGuildChannelsSchema,
     sendDiscordMessageSchema,
 } from "../schemas/discord.schema"
 
+import type {
+    DiscordGuild,
+    DiscordToken,
+    DiscordUser,
+    GuildChannel,
+} from "../types/discord.types"
+
 export type DiscordCallbackQuery = z.infer<typeof discordCallbackSchema>
 
 export type GetGuildChannelsParams = z.infer<typeof getGuildChannelsSchema>
 
-export type ConnectDiscordDto = z.infer<typeof connectDiscordSchema>
-
-export interface DiscordTokenDto {
-    access_token: string
-    token_type: "Bearer"
-    expires_in: number
-    refresh_token: string
-    scope: string
-}
-
-export interface DiscordUserDto {
-    id: string
-    username: string
-    global_name: string | null
-    discriminator: string
-    avatar: string | null
-}
-
-export interface DiscordGuildDto {
-    id: string
-    name: string
-    icon: string | null
-    owner: boolean
-    permissions: string
-    features: string[]
-}
-
-export interface DiscordChannelDto {
-    id: string
-    guild_id: string
-    name: string
-    type: number
-    position: number
+export interface DiscordInviteUrlResponseDto {
+    url: string
 }
 
 export type SendDiscordMessageDto = z.infer<typeof sendDiscordMessageSchema>
+
+export interface DiscordMessageResponseDto {
+    message: string
+}
+
+export interface DiscordInviteUrlResponseDto {
+    url: string
+}
+
+export type DiscordCallbackResponseDto = DiscordToken
+
+export type DiscordCurrentUserResponseDto = DiscordUser
+
+export type DiscordGuildsResponseDto = DiscordGuild[]
+
+export type DiscordChannelsResponseDto = GuildChannel[]

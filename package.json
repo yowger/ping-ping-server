@@ -6,7 +6,9 @@
         "dev": "tsx watch src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js",
-        "worker": "tsx src/workers/reminder.worker.ts"
+        "typecheck": "tsc --noEmit",
+        "worker": "tsx src/workers/reminder.worker.ts",
+        "knip": "knip"
     },
     "keywords": [],
     "author": "",
@@ -19,6 +21,7 @@
         "@types/morgan": "^1.9.10",
         "@types/node": "^26.1.1",
         "drizzle-kit": "^0.31.10",
+        "knip": "^6.29.0",
         "tsx": "^4.23.0",
         "typescript": "^7.0.2"
     },

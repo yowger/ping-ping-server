@@ -1,7 +1,7 @@
 import { ZodTypeAny, ZodError } from "zod"
 import { Request, Response, NextFunction } from "express"
 
-type ValidationTarget = "body" | "params" | "query"
+type ValidationTarget = "body" | "params" | "query" | "headers"
 
 export const validate =
     (schema: ZodTypeAny, target: ValidationTarget = "body") =>
