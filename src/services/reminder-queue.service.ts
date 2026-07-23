@@ -1,21 +1,25 @@
-import { getDelayUntil } from "../utils/date.utils"
-import { reminderQueue } from "../queues/reminder.queue"
 import { CreateReminderQueueDto } from "../dto/reminder-queue.dto"
+import { reminderQueue } from "../queues/reminder.queue"
+import { getDelayUntil } from "../utils/date.utils"
 
 class ReminderQueueService {
-    async create(data: CreateReminderQueueDto) {
+    private async addJob(data: CreateReminderQueueDto) {
         const delay = getDelayUntil(data.scheduledAt)
 
-        const job = await reminderQueue.add("send-reminder", data, {
+        return reminderQueue.add("send-reminder", data, {
             delay,
+            removeOnComplete: 100,
+            removeOnFail: 100,
+            // removeOnComplete: true,
+            // removeOnFail: true,
         })
-
-        // console.log("job counts:", await reminderQueue.getJobCounts())
-
-        return job
     }
 
-    async delete(jobId: string) {
+    async schedule(data: CreateReminderQueueDto) {
+        return this.addJob(data)
+    }
+
+    async remove(jobId: string) {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
@@ -47,7 +51,7 @@ class ReminderQueueService {
         ])
     }
 
-    async update(jobId: string, data: CreateReminderQueueDto) {
+    async reschedule(jobId: string, data: CreateReminderQueueDto) {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
@@ -56,16 +60,8 @@ class ReminderQueueService {
 
         await job.remove()
 
-        const delay = getDelayUntil(data.scheduledAt)
-
-        return reminderQueue.add("send-reminder", data, {
-            delay,
-            removeOnComplete: 100,
-            removeOnFail: 100,
-            // removeOnComplete: true,
-            // removeOnFail: true,
-        })
+        return this.addJob(data)
     }
 }
 
-export const reminderService = new ReminderQueueService()
+export const reminderQueueService = new ReminderQueueService()
