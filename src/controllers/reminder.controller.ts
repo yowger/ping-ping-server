@@ -1,16 +1,16 @@
 import { Request, Response } from "express"
 
-import { reminderService } from "../services/reminder.service"
+import { reminderService } from "../services/reminder-queue.service"
 
 import type {
-    CreateReminderDto,
-    DeleteReminderParams,
-    GetReminderParams,
-    UpdateReminderDto,
-} from "../dto/reminder.dto"
+    CreateReminderQueueDto,
+    DeleteReminderQueueParams,
+    GetReminderQueueParams,
+    UpdateReminderQueueDto,
+} from "../dto/reminder-queue.dto"
 
 class ReminderController {
-    async create(req: Request<{}, {}, CreateReminderDto>, res: Response) {
+    async create(req: Request<{}, {}, CreateReminderQueueDto>, res: Response) {
         const job = await reminderService.create(req.body)
 
         return res.status(201).json({
@@ -19,13 +19,13 @@ class ReminderController {
         })
     }
 
-    async delete(req: Request<DeleteReminderParams>, res: Response) {
+    async delete(req: Request<DeleteReminderQueueParams>, res: Response) {
         await reminderService.delete(req.params.id)
 
         return res.sendStatus(204)
     }
 
-    async getById(req: Request<GetReminderParams>, res: Response) {
+    async getById(req: Request<GetReminderQueueParams>, res: Response) {
         const job = await reminderService.getById(req.params.id)
 
         return res.status(200).json({
@@ -50,7 +50,7 @@ class ReminderController {
     }
 
     async update(
-        req: Request<DeleteReminderParams, {}, UpdateReminderDto>,
+        req: Request<DeleteReminderQueueParams, {}, UpdateReminderQueueDto>,
         res: Response,
     ) {
         const job = await reminderService.update(req.params.id, req.body)

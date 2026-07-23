@@ -30,3 +30,6 @@ dist-ssr
 ignore.notes
 
 notes
+
+*.http
+!*.example.http

@@ -1,9 +1,9 @@
 import { getDelayUntil } from "../utils/date.utils"
 import { reminderQueue } from "../queues/reminder.queue"
-import { CreateReminderDto } from "../dto/reminder.dto"
+import { CreateReminderQueueDto } from "../dto/reminder-queue.dto"
 
-class ReminderService {
-    async create(data: CreateReminderDto) {
+class ReminderQueueService {
+    async create(data: CreateReminderQueueDto) {
         const delay = getDelayUntil(data.scheduledAt)
 
         const job = await reminderQueue.add("send-reminder", data, {
@@ -47,7 +47,7 @@ class ReminderService {
         ])
     }
 
-    async update(jobId: string, data: CreateReminderDto) {
+    async update(jobId: string, data: CreateReminderQueueDto) {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
@@ -68,4 +68,4 @@ class ReminderService {
     }
 }
 
-export const reminderService = new ReminderService()
+export const reminderService = new ReminderQueueService()

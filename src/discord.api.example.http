@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3000/api
-@accessToken =
-@guildId = 
-@channelId = 
+@accessToken = 12345.6789
+@guildId = 12345678910
+@channelId = 12345678910
 
 ### ========================================
 ### Discord - Get Invite URL
