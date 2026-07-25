@@ -8,6 +8,8 @@ import {
 } from "discord.js"
 
 import { discordClient } from "../config/discord.config"
+import { BadRequestError } from "../errors/bad-request.error"
+import { NotFoundError } from "../errors/not-found.error"
 
 import type {
     DiscordMessage,
@@ -25,11 +27,11 @@ export class DiscordService {
         const channel = await discordClient.channels.fetch(channelId)
 
         if (!channel) {
-            throw new Error("Channel not found.")
+            throw new NotFoundError("Discord channel not found.")
         }
 
         if (!channel.isTextBased()) {
-            throw new Error("Channel is not text-based.")
+            throw new BadRequestError("Discord channel must be a text channel.")
         }
 
         const files = filePaths?.map(
