@@ -1,6 +1,8 @@
 import { reminderRepository } from "../repositories/reminder.repository"
 import { reminderQueueService } from "./reminder-queue.service"
 
+import { NotFoundError } from "../errors/not-found.error"
+
 import type { Reminder } from "../types/reminder-repository.types"
 import type { ReminderInput } from "../types/reminder.types"
 
@@ -22,7 +24,7 @@ class ReminderService {
         const reminder = await reminderRepository.getById(id)
 
         if (!reminder) {
-            throw new Error("Reminder not found.")
+            throw new NotFoundError("Reminder not found.")
         }
 
         return reminder
@@ -36,7 +38,7 @@ class ReminderService {
         const reminder = await reminderRepository.getById(id)
 
         if (!reminder) {
-            throw new Error("Reminder not found.")
+            throw new NotFoundError("Reminder not found.")
         }
 
         if (reminder.bullJobId) {
@@ -54,7 +56,7 @@ class ReminderService {
         const updatedReminder = await reminderRepository.update(id, data)
 
         if (!updatedReminder) {
-            throw new Error("Reminder not found.")
+            throw new NotFoundError("Reminder not found.")
         }
 
         return updatedReminder
@@ -64,7 +66,7 @@ class ReminderService {
         const reminder = await reminderRepository.getById(id)
 
         if (!reminder) {
-            throw new Error("Reminder not found.")
+            throw new NotFoundError("Reminder not found.")
         }
 
         if (reminder.bullJobId) {

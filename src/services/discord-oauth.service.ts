@@ -7,6 +7,9 @@ import {
     DISCORD_BOT_PERMISSIONS,
     DISCORD_OAUTH_SCOPES,
 } from "../constants/discord-oauth.constants"
+import { ExternalServiceError } from "../errors/external-service.error"
+import { NotFoundError } from "../errors/not-found.error"
+import { UnauthorizedError } from "../errors/unauthorized.error"
 
 import type {
     DiscordGuild,
@@ -14,9 +17,6 @@ import type {
     DiscordUser,
     GuildChannel,
 } from "../types/discord.types"
-import { ExternalServiceError } from "../errors/external-service.error"
-import { NotFoundError } from "../errors/not-found.error"
-import { UnauthorizedError } from "../errors/unauthorized.error"
 
 export class DiscordOAuthService {
     generateInviteUrl(): string {

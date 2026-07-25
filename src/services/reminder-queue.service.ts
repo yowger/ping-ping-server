@@ -1,6 +1,8 @@
 import { reminderQueue } from "../queues/reminder.queue"
 import { getDelayUntil } from "../utils/date.utils"
 
+import { NotFoundError } from "../errors/not-found.error"
+
 import type { ReminderJob, ReminderQueueData } from "../types/reminder.types"
 
 class ReminderQueueService {
@@ -24,7 +26,7 @@ class ReminderQueueService {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
-            throw new Error("Reminder job not found.")
+            throw new NotFoundError("Reminder job not found.")
         }
 
         await job.remove()
@@ -36,7 +38,7 @@ class ReminderQueueService {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
-            throw new Error("Reminder job not found.")
+            throw new NotFoundError("Reminder job not found.")
         }
 
         return job
@@ -59,7 +61,7 @@ class ReminderQueueService {
         const job = await reminderQueue.getJob(jobId)
 
         if (!job) {
-            throw new Error("Reminder job not found.")
+            throw new NotFoundError("Reminder job not found.")
         }
 
         await job.remove()
