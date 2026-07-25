@@ -14,6 +14,9 @@ import type {
     DiscordUser,
     GuildChannel,
 } from "../types/discord.types"
+import { ExternalServiceError } from "../errors/external-service.error"
+import { NotFoundError } from "../errors/not-found.error"
+import { UnauthorizedError } from "../errors/unauthorized.error"
 
 export class DiscordOAuthService {
     generateInviteUrl(): string {
@@ -45,8 +48,19 @@ export class DiscordOAuthService {
             body,
         })
 
+        if (response.status === 400) {
+            throw new UnauthorizedError(
+                "Invalid or expired authorization code.",
+            )
+        }
+
         if (!response.ok) {
-            throw new Error("Failed to exchange authorization code.")
+            const error = await response.json().catch(() => null)
+
+            throw new ExternalServiceError(
+                error?.message ??
+                    "Failed to exchange Discord authorization code.",
+            )
         }
 
         return await response.json()
@@ -59,8 +73,18 @@ export class DiscordOAuthService {
             },
         })
 
+        if (response.status === 401) {
+            throw new UnauthorizedError(
+                "Invalid or expired Discord access token.",
+            )
+        }
+
         if (!response.ok) {
-            throw new Error("Failed to fetch current user.")
+            const error = await response.json().catch(() => null)
+
+            throw new ExternalServiceError(
+                error?.message ?? "Failed to fetch Discord user.",
+            )
         }
 
         return await response.json()
@@ -73,29 +97,43 @@ export class DiscordOAuthService {
             },
         })
 
+        if (response.status === 401) {
+            throw new UnauthorizedError(
+                "Invalid or expired Discord access token.",
+            )
+        }
+
         if (!response.ok) {
-            throw new Error("Failed to fetch guilds.")
+            const error = await response.json().catch(() => null)
+
+            throw new ExternalServiceError(
+                error?.message ?? "Failed to fetch Discord guilds.",
+            )
         }
 
         return await response.json()
     }
 
     async getGuildChannels(guildId: string): Promise<GuildChannel[]> {
-        const guild = await discordClient.guilds.fetch(guildId)
+        try {
+            const guild = await discordClient.guilds.fetch(guildId)
 
-        const channels = await guild.channels.fetch()
+            const channels = await guild.channels.fetch()
 
-        return channels
-            .filter(
-                (channel) =>
-                    channel &&
-                    channel.isTextBased() &&
-                    channel.type === ChannelType.GuildText,
-            )
-            .map((channel) => ({
-                id: channel!.id,
-                name: channel!.name,
-            }))
+            return channels
+                .filter(
+                    (channel) =>
+                        channel &&
+                        channel.isTextBased() &&
+                        channel.type === ChannelType.GuildText,
+                )
+                .map((channel) => ({
+                    id: channel!.id,
+                    name: channel!.name,
+                }))
+        } catch {
+            throw new NotFoundError("Discord guild not found.")
+        }
     }
 
     async refreshAccessToken(refreshToken: string): Promise<DiscordToken> {
@@ -114,8 +152,16 @@ export class DiscordOAuthService {
             body,
         })
 
+        if (response.status === 400 || response.status === 401) {
+            throw new UnauthorizedError("Invalid refresh token.")
+        }
+
         if (!response.ok) {
-            throw new Error("Failed to refresh Discord access token.")
+            const error = await response.json().catch(() => null)
+
+            throw new ExternalServiceError(
+                error?.message ?? "Failed to refresh Discord access token.",
+            )
         }
 
         return await response.json()
@@ -130,3 +176,4 @@ export const discordOAuthService = new DiscordOAuthService()
 
 // todo save: accessToken, refreshToken, expiresAt, discordUserId for each individual user in the database
 // todo: add database and refactor whole
+// reduce redundant
