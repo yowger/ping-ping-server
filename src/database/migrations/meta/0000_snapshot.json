@@ -1,11 +1,11 @@
 {
-  "id": "5ab1f647-d94b-4942-9446-a9a91c197aa5",
+  "id": "a786c471-aa06-4c07-adb0-71d7700dbd54",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.reminders": {
-      "name": "reminders",
+    "public.discord_connections": {
+      "name": "discord_connections",
       "schema": "",
       "columns": {
         "id": {
@@ -15,27 +15,39 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "title": {
-          "name": "title",
+        "discordUserId": {
+          "name": "discordUserId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "message": {
-          "name": "message",
+        "guildId": {
+          "name": "guildId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "scheduledAt": {
-          "name": "scheduledAt",
+        "channelId": {
+          "name": "channelId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accessToken": {
+          "name": "accessToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "channel": {
-          "name": "channel",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -56,6 +68,84 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.reminders": {
+      "name": "reminders",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "discordConnectionId": {
+          "name": "discordConnectionId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jobId": {
+          "name": "jobId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduledAt": {
+          "name": "scheduledAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reminders_discordConnectionId_discord_connections_id_fk": {
+          "name": "reminders_discordConnectionId_discord_connections_id_fk",
+          "tableFrom": "reminders",
+          "tableTo": "discord_connections",
+          "columnsFrom": [
+            "discordConnectionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
