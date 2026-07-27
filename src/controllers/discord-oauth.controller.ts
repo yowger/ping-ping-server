@@ -20,16 +20,16 @@ export class DiscordOAuthController {
         return res.json({ url })
     }
 
-    async callback(
-        req: Request<{}, {}, {}, DiscordCallbackQuery>,
-        res: Response<DiscordCallbackResponseDto>,
-    ) {
-        const { code } = req.query
+    // async callback(
+    //     req: Request<{}, {}, {}, DiscordCallbackQuery>,
+    //     res: Response<DiscordCallbackResponseDto>,
+    // ) {
+    //     const { code } = req.query
 
-        const token = await discordOAuthService.exchangeAuthorizationCode(code)
+    //     const token = await discordOAuthService.exchangeAuthorizationCode(code)
 
-        return res.json(token)
-    }
+    //     return res.json(token)
+    // }
 
     async getCurrentUser(
         req: Request,

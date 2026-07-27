@@ -5,7 +5,7 @@ import { discordController } from "../controllers/discord.controller"
 import { validate } from "../middleware/validate.middleware"
 import {
     authorizationHeaderSchema,
-    discordCallbackSchema,
+    // discordCallbackSchema,
     getGuildChannelsSchema,
     sendDiscordMessageSchema,
 } from "../schemas/discord.schema"
@@ -14,11 +14,11 @@ const router = Router()
 
 router.get("/invite", discordOAuthController.getInviteUrl)
 
-router.get(
-    "/callback",
-    validate(discordCallbackSchema, "query"),
-    discordOAuthController.callback,
-)
+// router.get(
+//     "/callback",
+//     validate(discordCallbackSchema, "query"),
+//     discordOAuthController.callback,
+// )
 
 router.get(
     "/me",

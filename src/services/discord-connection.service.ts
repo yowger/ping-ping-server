@@ -6,11 +6,13 @@ import { NotFoundError } from "../errors/not-found.error"
 
 import type {
     DiscordConnection,
-    ConnectDiscordInput,
+    CreateDiscordConnectionInput,
 } from "../types/discord-connection.types"
 
 class DiscordConnectionService {
-    async connect(data: ConnectDiscordInput): Promise<DiscordConnection> {
+    async createConnection(
+        data: CreateDiscordConnectionInput,
+    ): Promise<DiscordConnection> {
         const token = await discordOAuthService.exchangeAuthorizationCode(
             data.code,
         )
@@ -19,23 +21,15 @@ class DiscordConnectionService {
             token.access_token,
         )
 
-        const existing = await discordConnectionRepository.getByGuildId(
-            data.guildId,
-        )
-
-        if (existing) {
-            throw new ConflictError("This Discord server is already connected.")
-        }
-
         const connection = await discordConnectionRepository.create({
             discordUserId: user.id,
             guildId: data.guildId,
-            channelId: data.channelId,
             accessToken: token.access_token,
             refreshToken: token.refresh_token,
             expiresAt: new Date(Date.now() + token.expires_in * 1000),
         })
 
+        return connection
         return connection
     }
 

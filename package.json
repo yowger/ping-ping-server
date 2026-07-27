@@ -8,7 +8,9 @@
         "start": "node dist/index.js",
         "typecheck": "tsc --noEmit",
         "worker": "tsx src/workers/reminder.worker.ts",
-        "knip": "knip"
+        "knip": "knip",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate"
     },
     "keywords": [],
     "author": "",

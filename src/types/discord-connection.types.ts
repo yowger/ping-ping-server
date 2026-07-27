@@ -1,21 +1,20 @@
 import { discordConnections } from "../database/schemas/discord-connection.schema"
 
-export interface ConnectDiscordInput {
+export interface CreateDiscordConnectionInput {
     code: string
     guildId: string
-    channelId: string
 }
 
-export interface DiscordConnectionInput {
+export interface CreateDiscordConnectionData {
     discordUserId: string
     guildId: string
-    channelId: string
     accessToken: string
     refreshToken: string
     expiresAt: Date
 }
 
 export interface UpdateDiscordConnectionInput {
+    guildId?: string
     channelId?: string
     accessToken?: string
     refreshToken?: string

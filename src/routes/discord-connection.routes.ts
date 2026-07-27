@@ -16,7 +16,7 @@ const router = Router()
 router.post(
     "/",
     validate(connectDiscordSchema),
-    discordConnectionController.connect,
+    discordConnectionController.createConnection,
 )
 
 router.get(

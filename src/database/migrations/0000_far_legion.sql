@@ -1,8 +1,8 @@
 CREATE TABLE "discord_connections" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"discordUserId" text NOT NULL,
-	"guildId" text NOT NULL,
-	"channelId" text NOT NULL,
+	"guildId" text,
+	"channelId" text,
 	"accessToken" text NOT NULL,
 	"refreshToken" text NOT NULL,
 	"expiresAt" timestamp NOT NULL,

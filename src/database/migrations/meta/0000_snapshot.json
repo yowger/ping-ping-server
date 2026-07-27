@@ -1,5 +1,5 @@
 {
-  "id": "a786c471-aa06-4c07-adb0-71d7700dbd54",
+  "id": "51e09a0b-6c94-4302-a008-777e472cd102",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -25,13 +25,13 @@
           "name": "guildId",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "channelId": {
           "name": "channelId",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "accessToken": {
           "name": "accessToken",

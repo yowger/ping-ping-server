@@ -4,13 +4,15 @@ import { db } from "../config/db.config"
 import { discordConnections } from "../database/schemas/discord-connection.schema"
 
 import type {
+    CreateDiscordConnectionData,
     DiscordConnection,
-    DiscordConnectionInput,
     UpdateDiscordConnectionInput,
 } from "../types/discord-connection.types"
 
 class DiscordConnectionRepository {
-    async create(data: DiscordConnectionInput): Promise<DiscordConnection> {
+    async create(
+        data: CreateDiscordConnectionData,
+    ): Promise<DiscordConnection> {
         const [connection] = await db
             .insert(discordConnections)
             .values(data)

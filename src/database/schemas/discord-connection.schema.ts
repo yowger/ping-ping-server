@@ -6,8 +6,8 @@ export const discordConnections = pgTable("discord_connections", {
     //     .references(() => users.id)
     //     .notNull(),
     discordUserId: text().notNull(),
-    guildId: text().notNull(),
-    channelId: text().notNull(),
+    guildId: text(),
+    channelId: text(),
     accessToken: text().notNull(),
     refreshToken: text().notNull(),
     expiresAt: timestamp().notNull(),

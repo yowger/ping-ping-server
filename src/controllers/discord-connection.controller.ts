@@ -13,11 +13,11 @@ import type {
 } from "../dto/discord-connection.dto"
 
 export class DiscordConnectionController {
-    async connect(
+    async createConnection(
         req: Request<{}, {}, ConnectDiscordDto>,
         res: Response<ConnectDiscordResponseDto>,
     ) {
-        const connection = await discordConnectionService.connect(req.body)
+        const connection = await discordConnectionService.createConnection(req.body)
 
         return res.status(201).json(connection)
     }
