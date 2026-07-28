@@ -11,4 +11,5 @@ export const env = {
     DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
 }

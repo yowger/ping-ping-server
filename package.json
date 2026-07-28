@@ -29,6 +29,7 @@
     },
     "type": "module",
     "dependencies": {
+        "better-auth": "^1.6.25",
         "bullmq": "^5.80.1",
         "compression": "^1.8.1",
         "cors": "^2.8.6",
