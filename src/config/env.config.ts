@@ -12,4 +12,6 @@ export const env = {
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    TRUSTED_ORIGINS: process.env.TRUSTED_ORIGINS,
+    NODE_ENV: process.env.NODE_ENV || "development",
 }
