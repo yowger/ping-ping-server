@@ -26,9 +26,10 @@ export type DeleteDiscordConnectionParams = z.infer<
 
 export interface DiscordConnectionResponseDto {
     id: string
+    userId: string
     discordUserId: string
-    guildId: string
-    channelId: string
+    guildId: string | null
+    channelId: string | null
     accessToken: string
     refreshToken: string
     expiresAt: Date

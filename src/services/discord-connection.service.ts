@@ -11,8 +11,15 @@ import type {
 
 class DiscordConnectionService {
     async createConnection(
+        userId: string,
         data: CreateDiscordConnectionInput,
     ): Promise<DiscordConnection> {
+        const existing = await discordConnectionRepository.getByUserId(userId)
+
+        if (existing) {
+            throw new ConflictError("Discord account already connected.")
+        }
+
         const token = await discordOAuthService.exchangeAuthorizationCode(
             data.code,
         )
@@ -22,6 +29,7 @@ class DiscordConnectionService {
         )
 
         const connection = await discordConnectionRepository.create({
+            userId,
             discordUserId: user.id,
             guildId: data.guildId,
             accessToken: token.access_token,
@@ -30,11 +38,10 @@ class DiscordConnectionService {
         })
 
         return connection
-        return connection
     }
 
-    async getById(id: string): Promise<DiscordConnection> {
-        const connection = await discordConnectionRepository.getById(id)
+    async getByUserId(userId: string): Promise<DiscordConnection> {
+        const connection = await discordConnectionRepository.getByUserId(userId)
 
         if (!connection) {
             throw new NotFoundError("Discord connection not found.")
@@ -42,6 +49,33 @@ class DiscordConnectionService {
 
         return connection
     }
+
+    // async updateByUserId(
+    //     userId: string,
+    //     data: UpdateDiscordConnectionInput,
+    // ): Promise<DiscordConnection | undefined> {
+    //     const [connection] = await db
+    //         .update(discordConnections)
+    //         .set({
+    //             ...data,
+    //             updatedAt: new Date(),
+    //         })
+    //         .where(eq(discordConnections.userId, userId))
+    //         .returning()
+
+    //     return connection
+    // }
+
+    // async deleteByUserId(
+    //     userId: string,
+    // ): Promise<DiscordConnection | undefined> {
+    //     const [connection] = await db
+    //         .delete(discordConnections)
+    //         .where(eq(discordConnections.userId, userId))
+    //         .returning()
+
+    //     return connection
+    // }
 
     async getByGuildId(guildId: string): Promise<DiscordConnection> {
         const connection =
@@ -55,32 +89,32 @@ class DiscordConnectionService {
     }
 
     async updateChannel(
-        id: string,
+        userId: string,
         channelId: string,
     ): Promise<DiscordConnection> {
-        const connection = await this.getById(id)
+        const connection = await this.getByUserId(userId)
 
         return (await discordConnectionRepository.update(connection.id, {
             channelId,
         }))!
     }
 
-    async refreshToken(id: string): Promise<DiscordConnection> {
-        const connection = await this.getById(id)
+    // async refreshToken(id: string): Promise<DiscordConnection> {
+    //     const connection = await this.getByUserId(id)
 
-        const token = await discordOAuthService.refreshAccessToken(
-            connection.refreshToken,
-        )
+    //     const token = await discordOAuthService.refreshAccessToken(
+    //         connection.refreshToken,
+    //     )
 
-        return (await discordConnectionRepository.update(connection.id, {
-            accessToken: token.access_token,
-            refreshToken: token.refresh_token,
-            expiresAt: new Date(Date.now() + token.expires_in * 1000),
-        }))!
-    }
+    //     return (await discordConnectionRepository.update(connection.id, {
+    //         accessToken: token.access_token,
+    //         refreshToken: token.refresh_token,
+    //         expiresAt: new Date(Date.now() + token.expires_in * 1000),
+    //     }))!
+    // }
 
-    async disconnect(id: string): Promise<void> {
-        const connection = await this.getById(id)
+    async disconnect(userId: string): Promise<void> {
+        const connection = await this.getByUserId(userId)
 
         await discordConnectionRepository.delete(connection.id)
     }

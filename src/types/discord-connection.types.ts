@@ -6,6 +6,7 @@ export interface CreateDiscordConnectionInput {
 }
 
 export interface CreateDiscordConnectionData {
+    userId: string
     discordUserId: string
     guildId: string
     accessToken: string
@@ -13,13 +14,15 @@ export interface CreateDiscordConnectionData {
     expiresAt: Date
 }
 
-export interface UpdateDiscordConnectionInput {
-    guildId?: string
-    channelId?: string
-    accessToken?: string
-    refreshToken?: string
-    expiresAt?: Date
+export interface DiscordConnectionUpdateData {
+    guildId: string
+    channelId: string
+    accessToken: string
+    refreshToken: string
+    expiresAt: Date
 }
+
+export type UpdateDiscordConnectionInput = Partial<DiscordConnectionUpdateData>
 
 export type DiscordConnection = typeof discordConnections.$inferSelect
 

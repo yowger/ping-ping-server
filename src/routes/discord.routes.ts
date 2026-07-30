@@ -3,41 +3,28 @@ import { Router } from "express"
 import { discordOAuthController } from "../controllers/discord-oauth.controller"
 import { discordController } from "../controllers/discord.controller"
 import { validate } from "../middleware/validate.middleware"
-import {
-    authorizationHeaderSchema,
-    // discordCallbackSchema,
-    getGuildChannelsSchema,
-    sendDiscordMessageSchema,
-} from "../schemas/discord.schema"
+import { sendDiscordMessageSchema } from "../schemas/discord.schema"
+import { requireAuth } from "../middleware/require-auth.middleware"
 
 const router = Router()
 
-router.get("/invite", discordOAuthController.getInviteUrl)
+router.get("/invite", requireAuth, discordOAuthController.getInviteUrl)
 
-// router.get(
-//     "/callback",
-//     validate(discordCallbackSchema, "query"),
-//     discordOAuthController.callback,
-// )
+router.get("/me", requireAuth, discordOAuthController.getCurrentUser)
 
-router.get(
-    "/me",
-    validate(authorizationHeaderSchema, "headers"),
-    discordOAuthController.getCurrentUser,
-)
-
-router.get(
-    "/guilds",
-    validate(authorizationHeaderSchema, "headers"),
-    discordOAuthController.getGuilds,
-)
+router.get("/guilds", requireAuth, discordOAuthController.getGuilds)
 
 router.get(
     "/guilds/:guildId/channels",
-    validate(getGuildChannelsSchema, "params"),
+    requireAuth,
     discordOAuthController.getChannels,
 )
 
-router.post("/send", validate(sendDiscordMessageSchema), discordController.send)
+router.post(
+    "/send",
+    requireAuth,
+    validate(sendDiscordMessageSchema),
+    discordController.send,
+)
 
 export default router

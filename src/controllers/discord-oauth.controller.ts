@@ -4,14 +4,14 @@ import { discordOAuthService } from "../services/discord-oauth.service"
 import { getAccessToken } from "../utils/http.utils"
 
 import type {
-    DiscordCallbackQuery,
-    DiscordCallbackResponseDto,
     DiscordChannelsResponseDto,
     DiscordCurrentUserResponseDto,
     DiscordGuildsResponseDto,
     DiscordInviteUrlResponseDto,
     GetGuildChannelsParams,
 } from "../dto/discord.dto"
+import { discordConnectionService } from "../services/discord-connection.service"
+import { NotFoundError } from "../errors/not-found.error"
 
 export class DiscordOAuthController {
     getInviteUrl(req: Request, res: Response<DiscordInviteUrlResponseDto>) {
@@ -20,42 +20,40 @@ export class DiscordOAuthController {
         return res.json({ url })
     }
 
-    // async callback(
-    //     req: Request<{}, {}, {}, DiscordCallbackQuery>,
-    //     res: Response<DiscordCallbackResponseDto>,
-    // ) {
-    //     const { code } = req.query
-
-    //     const token = await discordOAuthService.exchangeAuthorizationCode(code)
-
-    //     return res.json(token)
-    // }
-
     async getCurrentUser(
         req: Request,
         res: Response<DiscordCurrentUserResponseDto>,
     ) {
-        const accessToken = getAccessToken(req)
+        const connection = await discordConnectionService.getByUserId(
+            req.user.id,
+        )
 
-        const user = await discordOAuthService.getCurrentUser(accessToken)
+        const user = await discordOAuthService.getCurrentUser(
+            connection.accessToken,
+        )
 
         return res.json(user)
     }
 
     async getGuilds(req: Request, res: Response<DiscordGuildsResponseDto>) {
-        const accessToken = getAccessToken(req)
+        const connection = await discordConnectionService.getByUserId(
+            req.user.id,
+        )
 
-        const guilds = await discordOAuthService.getUserGuilds(accessToken)
+        const guilds = await discordOAuthService.getUserGuilds(
+            connection.accessToken,
+        )
 
         return res.json(guilds)
     }
 
-    async getChannels(
-        req: Request<GetGuildChannelsParams>,
-        res: Response<DiscordChannelsResponseDto>,
-    ) {
+    async getChannels(req: Request, res: Response<DiscordChannelsResponseDto>) {
+        const connection = await discordConnectionService.getByUserId(
+            req.user.id,
+        )
+
         const channels = await discordOAuthService.getGuildChannels(
-            req.params.guildId,
+            connection.guildId,
         )
 
         return res.json(channels)

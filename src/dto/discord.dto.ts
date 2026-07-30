@@ -1,7 +1,6 @@
 import { z } from "zod"
 
 import {
-    discordCallbackSchema,
     getGuildChannelsSchema,
     sendDiscordMessageSchema,
 } from "../schemas/discord.schema"
@@ -12,8 +11,6 @@ import type {
     DiscordUser,
     GuildChannel,
 } from "../types/discord.types"
-
-export type DiscordCallbackQuery = z.infer<typeof discordCallbackSchema>
 
 export type GetGuildChannelsParams = z.infer<typeof getGuildChannelsSchema>
 

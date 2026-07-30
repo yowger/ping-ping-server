@@ -24,7 +24,7 @@ app.use(
     }),
 )
 
-app.all("/api/{*auth}", toNodeHandler(auth))
+app.all("/api/auth/{*any}", toNodeHandler(auth))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -32,6 +32,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/api/reminders", reminderRoutes)
 app.use("/api/discord", discordRoutes)
 app.use("/api/discord/connections", discordConnectionRoutes)
+app.use((req, res) => {
+    res.status(404).json({ message: "Route not found." })
+})
 app.use(errorHandler)
 
 export { app }

@@ -3,62 +3,49 @@ import { Request, Response } from "express"
 import { discordConnectionService } from "../services/discord-connection.service"
 
 import type {
-    ConnectDiscordDto,
     ConnectDiscordResponseDto,
-    DeleteDiscordConnectionParams,
     DiscordConnectionResponseDto,
-    GetDiscordConnectionParams,
-    GetDiscordConnectionByGuildParams,
     UpdateDiscordChannelDto,
 } from "../dto/discord-connection.dto"
 
 export class DiscordConnectionController {
     async createConnection(
-        req: Request<{}, {}, ConnectDiscordDto>,
+        req: Request,
         res: Response<ConnectDiscordResponseDto>,
     ) {
-        const connection = await discordConnectionService.createConnection(req.body)
+        const connection = await discordConnectionService.createConnection(
+            req.user.id,
+            req.body,
+        )
 
         return res.status(201).json(connection)
     }
 
-    async getById(
-        req: Request<GetDiscordConnectionParams>,
+    async getConnection(
+        req: Request,
         res: Response<DiscordConnectionResponseDto>,
     ) {
-        const connection = await discordConnectionService.getById(req.params.id)
-
-        return res.status(200).json(connection)
-    }
-
-    async getByGuildId(
-        req: Request<GetDiscordConnectionByGuildParams>,
-        res: Response<DiscordConnectionResponseDto>,
-    ) {
-        const connection = await discordConnectionService.getByGuildId(
-            req.params.guildId,
+        const connection = await discordConnectionService.getByUserId(
+            req.user.id,
         )
 
         return res.status(200).json(connection)
     }
 
     async updateChannel(
-        req: Request<GetDiscordConnectionParams, {}, UpdateDiscordChannelDto>,
+        req: Request<{}, {}, UpdateDiscordChannelDto>,
         res: Response<DiscordConnectionResponseDto>,
     ) {
         const connection = await discordConnectionService.updateChannel(
-            req.params.id,
+            req.user.id,
             req.body.channelId,
         )
 
         return res.status(200).json(connection)
     }
 
-    async disconnect(
-        req: Request<DeleteDiscordConnectionParams>,
-        res: Response,
-    ) {
-        await discordConnectionService.disconnect(req.params.id)
+    async disconnect(req: Request, res: Response) {
+        await discordConnectionService.disconnect(req.user.id)
 
         return res.sendStatus(204)
     }

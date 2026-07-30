@@ -30,6 +30,15 @@ class DiscordConnectionRepository {
         return connection
     }
 
+    async getByUserId(userId: string): Promise<DiscordConnection | undefined> {
+        const [connection] = await db
+            .select()
+            .from(discordConnections)
+            .where(eq(discordConnections.userId, userId))
+
+        return connection
+    }
+
     async getByGuildId(
         guildId: string,
     ): Promise<DiscordConnection | undefined> {
