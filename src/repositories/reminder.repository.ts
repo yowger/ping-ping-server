@@ -1,41 +1,58 @@
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 
 import { db } from "../config/db.config"
 import { reminders } from "../database/schemas/reminder.schema"
 
-import type { Reminder, ReminderInput } from "../types/reminder-repository.types"
+import type {
+    Reminder,
+    ReminderInput,
+    UpdateReminderInput,
+} from "../types/reminder-repository.types"
 
 class ReminderRepository {
     async create(data: ReminderInput): Promise<Reminder> {
         const [reminder] = await db
             .insert(reminders)
             .values({
+                discordConnectionId: data.discordConnectionId,
                 title: data.title,
                 message: data.message,
                 scheduledAt: new Date(data.scheduledAt),
-                channel: data.channel,
             })
             .returning()
 
         return reminder
     }
 
-    async getById(id: string): Promise<Reminder | undefined> {
+    async findByDiscordConnectionId(
+        discordConnectionId: string,
+    ): Promise<Reminder[]> {
+        return db
+            .select()
+            .from(reminders)
+            .where(eq(reminders.discordConnectionId, discordConnectionId))
+    }
+
+    async getByIdAndDiscordConnectionId(
+        id: string,
+        discordConnectionId: string,
+    ): Promise<Reminder | undefined> {
         const [reminder] = await db
             .select()
             .from(reminders)
-            .where(eq(reminders.id, id))
+            .where(
+                and(
+                    eq(reminders.id, id),
+                    eq(reminders.discordConnectionId, discordConnectionId),
+                ),
+            )
 
         return reminder
     }
 
-    async findAll(): Promise<Reminder[]> {
-        return db.select().from(reminders)
-    }
-
     async update(
         id: string,
-        data: ReminderInput,
+        data: UpdateReminderInput,
     ): Promise<Reminder | undefined> {
         const [reminder] = await db
             .update(reminders)
@@ -43,7 +60,6 @@ class ReminderRepository {
                 title: data.title,
                 message: data.message,
                 scheduledAt: new Date(data.scheduledAt),
-                channel: data.channel,
                 updatedAt: new Date(),
             })
             .where(eq(reminders.id, id))
@@ -61,14 +77,14 @@ class ReminderRepository {
         return reminder
     }
 
-    async updateBullJobId(
+    async updateJobId(
         id: string,
-        bullJobId: string,
+        jobId: string,
     ): Promise<Reminder | undefined> {
         const [reminder] = await db
             .update(reminders)
             .set({
-                bullJobId,
+                jobId,
                 updatedAt: new Date(),
             })
             .where(eq(reminders.id, id))

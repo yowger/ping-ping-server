@@ -15,13 +15,13 @@ class ReminderController {
         req: Request<{}, {}, CreateReminderDto>,
         res: Response<ReminderResponseDto>,
     ) {
-        const reminder = await reminderService.create(req.body)
+        const reminder = await reminderService.create(req.user.id, req.body)
 
         return res.status(201).json(reminder)
     }
 
     async getAll(req: Request, res: Response<ReminderResponseDto[]>) {
-        const reminders = await reminderService.getAll()
+        const reminders = await reminderService.getAll(req.user.id)
 
         return res.status(200).json(reminders)
     }
@@ -30,22 +30,29 @@ class ReminderController {
         req: Request<GetReminderParams>,
         res: Response<ReminderResponseDto>,
     ) {
-        const reminder = await reminderService.getById(req.params.id)
+        const reminder = await reminderService.getById(
+            req.user.id,
+            req.params.id,
+        )
 
         return res.status(200).json(reminder)
     }
 
     async update(
-        req: Request<DeleteReminderParams, {}, UpdateReminderDto>,
+        req: Request<GetReminderParams, {}, UpdateReminderDto>,
         res: Response<ReminderResponseDto>,
     ) {
-        const reminder = await reminderService.update(req.params.id, req.body)
+        const reminder = await reminderService.update(
+            req.user.id,
+            req.params.id,
+            req.body,
+        )
 
         return res.status(200).json(reminder)
     }
 
     async delete(req: Request<DeleteReminderParams>, res: Response) {
-        await reminderService.delete(req.params.id)
+        await reminderService.delete(req.user.id, req.params.id)
 
         return res.sendStatus(204)
     }

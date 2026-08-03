@@ -9,7 +9,6 @@ export const reminders = pgTable("reminders", {
             onDelete: "cascade",
         })
         .notNull(),
-
     jobId: text(),
     title: text().notNull(),
     message: text().notNull(),

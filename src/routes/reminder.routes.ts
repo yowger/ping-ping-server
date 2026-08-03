@@ -4,33 +4,39 @@ import { reminderController } from "../controllers/reminder.controller"
 import { validate } from "../middleware/validate.middleware"
 import {
     createReminderQueueSchema,
-    deleteReminderQueueSchema,
-    getReminderQueueSchema,
-    updateReminderQueueSchema,
+    reminderIdParamsSchema,
 } from "../schemas/reminder-queue.schema"
+import { requireAuth } from "../middleware/require-auth.middleware"
 
 const router = Router()
 
-router.post("/", validate(createReminderQueueSchema), reminderController.create)
+router.post(
+    "/",
+    requireAuth,
+    validate(createReminderQueueSchema),
+    reminderController.create,
+)
 
-router.get("/", reminderController.getAll)
+router.get("/", requireAuth, reminderController.getAll)
 
 router.get(
     "/:id",
-    validate(getReminderQueueSchema, "params"),
+    requireAuth,
+    validate(reminderIdParamsSchema, "params"),
     reminderController.getById,
 )
 
 router.patch(
     "/:id",
-    validate(deleteReminderQueueSchema, "params"),
-    validate(updateReminderQueueSchema),
+    requireAuth,
+    validate(reminderIdParamsSchema, "params"),
     reminderController.update,
 )
 
 router.delete(
     "/:id",
-    validate(deleteReminderQueueSchema, "params"),
+    requireAuth,
+    validate(reminderIdParamsSchema, "params"),
     reminderController.delete,
 )
 
