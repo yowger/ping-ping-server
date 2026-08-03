@@ -8,10 +8,8 @@ import type {
     DiscordCurrentUserResponseDto,
     DiscordGuildsResponseDto,
     DiscordInviteUrlResponseDto,
-    GetGuildChannelsParams,
 } from "../dto/discord.dto"
 import { discordConnectionService } from "../services/discord-connection.service"
-import { NotFoundError } from "../errors/not-found.error"
 
 export class DiscordOAuthController {
     getInviteUrl(req: Request, res: Response<DiscordInviteUrlResponseDto>) {

@@ -14,6 +14,4 @@ export interface ReminderQueueData extends ReminderInput {
 
 export type Reminder = typeof reminders.$inferSelect
 
-export type NewReminder = typeof reminders.$inferInsert
-
 export type ReminderJob = Job<ReminderQueueData>

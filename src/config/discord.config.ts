@@ -17,3 +17,5 @@ discordClient.on("error", (err) => {
 export async function connectDiscord() {
     await discordClient.login(env.DISCORD_BOT_TOKEN)
 }
+
+connectDiscord()

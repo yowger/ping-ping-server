@@ -2,6 +2,7 @@ import { reminderQueue } from "../queues/reminder.queue"
 import { getDelayUntil } from "../utils/date.utils"
 
 import { NotFoundError } from "../errors/not-found.error"
+import { SEND_REMINDER_JOB } from "../constants/queue.constants"
 
 import type { ReminderJob, ReminderQueueData } from "../types/reminder.types"
 
@@ -9,7 +10,7 @@ class ReminderQueueService {
     private async addJob(data: ReminderQueueData): Promise<ReminderJob> {
         const delay = getDelayUntil(data.scheduledAt)
 
-        return reminderQueue.add("send-reminder", data, {
+        return reminderQueue.add(SEND_REMINDER_JOB, data, {
             delay,
             removeOnComplete: 100,
             removeOnFail: 100,

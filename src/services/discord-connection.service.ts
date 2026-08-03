@@ -3,6 +3,7 @@ import { discordOAuthService } from "./discord-oauth.service"
 
 import { discordConnectionRepository } from "../repositories/discord-connection.repository"
 import { NotFoundError } from "../errors/not-found.error"
+import { BadRequestError } from "../errors/bad-request.error"
 
 import type {
     DiscordConnection,
@@ -45,6 +46,16 @@ class DiscordConnectionService {
 
         if (!connection) {
             throw new NotFoundError("Discord connection not found.")
+        }
+
+        return connection
+    }
+
+    async getActiveConnection(userId: string): Promise<DiscordConnection> {
+        const connection = await this.getByUserId(userId)
+
+        if (!connection.channelId) {
+            throw new BadRequestError("Please select a Discord channel first.")
         }
 
         return connection

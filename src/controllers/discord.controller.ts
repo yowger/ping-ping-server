@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { discordService } from "../services/discord.service"
+import { discordDeliveryService } from "../services/discord-delivery.service"
 
 import type {
     DiscordMessageResponseDto,
@@ -12,7 +12,7 @@ export class DiscordController {
         req: Request<{}, {}, SendDiscordMessageDto>,
         res: Response<DiscordMessageResponseDto>,
     ) {
-        await discordService.send(req.body)
+        await discordDeliveryService.send(req.body)
 
         return res.status(200).json({
             message: "Message sent successfully.",

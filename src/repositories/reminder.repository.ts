@@ -50,6 +50,15 @@ class ReminderRepository {
         return reminder
     }
 
+    async getById(id: string): Promise<Reminder | undefined> {
+        const [reminder] = await db
+            .select()
+            .from(reminders)
+            .where(eq(reminders.id, id))
+
+        return reminder
+    }
+
     async update(
         id: string,
         data: UpdateReminderInput,

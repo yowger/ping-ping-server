@@ -1,16 +1,7 @@
 import { z } from "zod"
 
-// export const discordCallbackSchema = z.object({
-//     code: z.string().min(1),
-// })
-
 export const getGuildChannelsSchema = z.object({
     guildId: z.string().min(1),
-})
-
-export const connectDiscordSchema = z.object({
-    guildId: z.string().min(1),
-    channelId: z.string().min(1),
 })
 
 export const sendDiscordMessageSchema = z.object({
@@ -25,8 +16,4 @@ export const sendDiscordMessageSchema = z.object({
         })
         .optional(),
     buttons: z.enum(["confirmation"]).optional(),
-})
-
-export const authorizationHeaderSchema = z.object({
-    authorization: z.string().startsWith("Bearer "),
 })

@@ -16,7 +16,7 @@ import type {
     SendDiscordMessageInput,
 } from "../types/discord.types"
 
-export class DiscordService {
+export class DiscordDeliveryService {
     async send({
         channelId,
         message,
@@ -74,7 +74,7 @@ export class DiscordService {
     }
 }
 
-export const discordService = new DiscordService()
+export const discordDeliveryService = new DiscordDeliveryService()
 
 // todo save: accessToken, refreshToken, expiresAt, discordUserId for each individual user in the database
 // todo: add database and refactor whole

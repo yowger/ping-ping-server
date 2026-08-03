@@ -2,18 +2,19 @@ import { Router } from "express"
 
 import { reminderController } from "../controllers/reminder.controller"
 import { validate } from "../middleware/validate.middleware"
-import {
-    createReminderQueueSchema,
-    reminderIdParamsSchema,
-} from "../schemas/reminder-queue.schema"
 import { requireAuth } from "../middleware/require-auth.middleware"
+import {
+    createReminderSchema,
+    reminderIdParamsSchema,
+    updateReminderSchema,
+} from "../schemas/reminder.schema"
 
 const router = Router()
 
 router.post(
     "/",
     requireAuth,
-    validate(createReminderQueueSchema),
+    validate(createReminderSchema),
     reminderController.create,
 )
 
@@ -30,6 +31,7 @@ router.patch(
     "/:id",
     requireAuth,
     validate(reminderIdParamsSchema, "params"),
+    validate(updateReminderSchema),
     reminderController.update,
 )
 

@@ -12,7 +12,8 @@ import type { ReminderInput } from "../types/reminder.types"
 
 class ReminderService {
     async create(userId: string, data: ReminderInput): Promise<Reminder> {
-        const connection = await discordConnectionService.getByUserId(userId)
+        const connection =
+            await discordConnectionService.getActiveConnection(userId)
 
         const reminder = await reminderRepository.create({
             ...data,
@@ -24,9 +25,7 @@ class ReminderService {
             reminderId: reminder.id,
         })
 
-        await reminderRepository.updateJobId(reminder.id, job.id!)
-
-        return reminder
+        return (await reminderRepository.updateJobId(reminder.id, job.id!))!
     }
 
     async getById(userId: string, id: string): Promise<Reminder> {
@@ -55,11 +54,16 @@ class ReminderService {
         id: string,
         data: UpdateReminderInput,
     ): Promise<Reminder> {
+        await discordConnectionService.getActiveConnection(userId)
+
         const reminder = await this.getById(userId, id)
 
         if (reminder.jobId) {
             const job = await reminderQueueService.reschedule(reminder.jobId, {
-                ...data,
+                title: data.title ?? reminder.title,
+                message: data.message ?? reminder.message,
+                scheduledAt:
+                    data.scheduledAt ?? reminder.scheduledAt.toISOString(),
                 reminderId: reminder.id,
             })
 

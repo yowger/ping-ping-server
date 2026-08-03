@@ -6,7 +6,7 @@ import { toNodeHandler } from "better-auth/node"
 import cors from "cors"
 
 import reminderRoutes from "./routes/reminder.routes"
-import discordRoutes from "./routes/discord.routes"
+import discordRoutesOauth from "./routes/discord-oauth.routes"
 import discordConnectionRoutes from "./routes/discord-connection.routes"
 import { errorHandler } from "./middleware/error.middleware"
 import { auth } from "./auth/auth"
@@ -30,7 +30,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/reminders", reminderRoutes)
-app.use("/api/discord", discordRoutes)
+app.use("/api/discord/oauth", discordRoutesOauth)
 app.use("/api/discord/connections", discordConnectionRoutes)
 app.use((req, res) => {
     res.status(404).json({ message: "Route not found." })
