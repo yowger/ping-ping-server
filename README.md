@@ -4,6 +4,15 @@ A Discord reminder service that lets users connect their Discord account,
 select a Discord channel, and schedule reminders that are delivered through
 a Discord bot.
 
+## Why I Built This
+
+I wanted a simple, custom notification system that I could use for me and with my
+friends instead of relying on generic reminder apps that has I have no control over it.
+
+The goal was to build something small but practical while also exploring
+how background jobs, Redis, BullMQ, Discord OAuth2, and Discord bots could
+work together in a real application.
+
 ## Features
 
 - User authentication
@@ -16,6 +25,12 @@ a Discord bot.
 - Discord message delivery
 - PostgreSQL persistence
 - Docker-based local development
+
+## Screenshots
+
+### Discord Notification
+
+![Discord Notification](docs/images/demo-1.gif)
 
 ## Tech Stack
 
