@@ -2,39 +2,19 @@ import { Worker } from "bullmq"
 
 import { redisConnection } from "../config/redis.config"
 import { REMINDER_QUEUE } from "../constants/queue.constants"
-import { reminderRepository } from "../repositories/reminder.repository"
-import { discordConnectionRepository } from "../repositories/discord-connection.repository"
-import { discordDeliveryService } from "../services/discord-delivery.service"
+import { jobHandlers } from "../handlers/job.handler"
 
 export const reminderWorker = new Worker(
     REMINDER_QUEUE,
     async (job) => {
         console.log("🚀 ~ job:", job)
-        try {
-            const reminder = await reminderRepository.getById(
-                job.data.reminderId,
-            )
+        const handler = jobHandlers[job.name]
 
-            if (!reminder) {
-                return
-            }
-
-            const connection = await discordConnectionRepository.getById(
-                reminder.discordConnectionId,
-            )
-            console.log("🚀 ~ connection:", connection)
-
-            if (!connection?.channelId) {
-                return
-            }
-
-            await discordDeliveryService.send({
-                channelId: connection.channelId,
-                message: reminder.message,
-            })
-        } catch (error) {
-            console.error("Error processing reminder job:", error)
+        if (!handler) {
+            throw new Error(`Unknown job: ${job.name}`)
         }
+
+        await handler(job)
     },
     {
         connection: redisConnection as any,
