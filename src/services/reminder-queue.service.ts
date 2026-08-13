@@ -12,10 +12,10 @@ class ReminderQueueService {
 
         return reminderQueue.add(SEND_REMINDER_JOB, data, {
             delay,
-            removeOnComplete: 100,
-            removeOnFail: 100,
-            // removeOnComplete: true,
-            // removeOnFail: true,
+            // removeOnComplete: 100,
+            // removeOnFail: 100,
+            removeOnComplete: true,
+            removeOnFail: true,
         })
     }
 
