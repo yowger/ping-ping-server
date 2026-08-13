@@ -84,7 +84,6 @@ Express API
   │
   └── Discord OAuth
 ```
-````
 
 ## How It Works
 
@@ -298,7 +297,7 @@ The reminder is persisted in PostgreSQL and scheduled through BullMQ.
 ## Future Improvements
 
 - [ ] Rich Discord embeds
-- [ ] Reminder recurrence
+- [ ] Reminder recurrence (e.g. take daily vitamins, run every saturday)
 - [ ] Reminder templates
 - [ ] Interactive Discord buttons
 - [ ] client side
