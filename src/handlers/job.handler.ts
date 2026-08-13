@@ -24,7 +24,11 @@ export const jobHandlers: Record<string, JobHandler> = {
 
         await discordDeliveryService.send({
             channelId: connection.channelId,
-            message: reminder.message,
+            embed: {
+                title: reminder.title,
+                description: reminder.message,
+            },
+            buttons: "confirmation",
         })
     },
 }
