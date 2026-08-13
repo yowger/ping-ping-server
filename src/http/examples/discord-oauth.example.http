@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:3000/api
+
+###
+### ========================================
+### Discord OAuth - Get Invite URL
+### ========================================
+GET {{baseUrl}}/discord/oauth/invite
+
+###
+### ========================================
+### Discord OAuth - Get Current Discord User
+### ========================================
+GET {{baseUrl}}/discord/oauth/me
+
+###
+### ========================================
+### Discord OAuth - Get User Guilds
+### ========================================
+GET {{baseUrl}}/discord/oauth/guilds
+
+###
+### ========================================
+### Discord OAuth - Get Channels
+### Uses the guildId stored in the user's Discord connection.
+### ========================================
+GET {{baseUrl}}/discord/oauth/guilds/channels

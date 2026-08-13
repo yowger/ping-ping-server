@@ -1,0 +1,126 @@
+@baseUrl = http://localhost:3000/api
+@reminderId =
+@channelId =
+
+### ========================================
+### AUTH
+### ========================================
+
+### Register
+POST {{baseUrl}}/auth/sign-up/email
+Content-Type: application/json
+
+{
+    "name": "john doe",
+    "email": "johndoe@example.com",
+    "password": "example123"
+}
+
+###
+
+### Login
+POST {{baseUrl}}/auth/sign-in/email
+Content-Type: application/json
+
+{
+    "email": "johndoe@example.com",
+    "password": "example123"
+}
+
+###
+
+### Session
+GET {{baseUrl}}/auth/session
+
+###
+
+### Logout
+POST {{baseUrl}}/auth/sign-out
+
+
+### ========================================
+### DISCORD CONNECTION
+### ========================================
+
+### Get Discord connection
+GET {{baseUrl}}/discord/connection
+
+###
+
+### Update Discord channel
+PATCH {{baseUrl}}/discord/connection/channel
+Content-Type: application/json
+
+{
+    "channelId": "{{channelId}}"
+}
+
+###
+
+### Disconnect Discord
+DELETE {{baseUrl}}/discord/connection
+
+
+### ========================================
+### REMINDERS
+### ========================================
+
+### Create reminder
+POST {{baseUrl}}/reminders
+Content-Type: application/json
+
+{
+    "title": "Hike Reminder",
+    "message": "Hike mount Loay today",
+    "scheduledAt": "2026-08-13T12:00:00.000Z"
+}
+
+###
+
+### Get all reminders
+GET {{baseUrl}}/reminders
+
+###
+
+### Get reminder by ID
+GET {{baseUrl}}/reminders/{{reminderId}}
+
+###
+
+### Update reminder
+PATCH {{baseUrl}}/reminders/{{reminderId}}
+Content-Type: application/json
+
+{
+    "title": "Reminder Updated",
+    "message": "The reminder was updated",
+    "scheduledAt": "2026-08-13T13:00:00.000Z"
+}
+
+###
+
+### Delete reminder
+DELETE {{baseUrl}}/reminders/{{reminderId}}
+
+
+### ========================================
+### DISCORD OAUTH
+### ========================================
+
+### Get Discord invite URL
+GET {{baseUrl}}/discord/invite
+
+###
+
+### Get current Discord user
+GET {{baseUrl}}/discord/me
+
+###
+
+### Get user's Discord guilds
+GET {{baseUrl}}/discord/guilds
+
+###
+
+### Get channels for selected guild
+GET {{baseUrl}}/discord/guilds/channels

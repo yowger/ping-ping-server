@@ -1,0 +1,64 @@
+@baseUrl = http://localhost:3000/api
+@accessToken = DUMMY_ACCESS_TOKEN
+@reminderId = DUMMY_REMINDER_ID
+
+### ========================================
+### Create Reminder
+### ========================================
+
+POST {{baseUrl}}/reminders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "Team Meeting",
+    "message": "Reminder: team meeting starts now.",
+    "scheduledAt": "2026-08-15T03:00:00.000Z"
+}
+
+### ========================================
+### Get All Reminders
+### ========================================
+
+GET {{baseUrl}}/reminders
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### Get Reminder By ID
+### ========================================
+
+GET {{baseUrl}}/reminders/{{reminderId}}
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### Update Reminder
+### ========================================
+
+PATCH {{baseUrl}}/reminders/{{reminderId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "Updated Team Meeting",
+    "message": "The team meeting has been rescheduled.",
+    "scheduledAt": "2026-08-15T04:00:00.000Z"
+}
+
+### ========================================
+### Partial Update (Title Only)
+### ========================================
+
+PATCH {{baseUrl}}/reminders/{{reminderId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "Updated Meeting Title"
+}
+
+### ========================================
+### Delete Reminder
+### ========================================
+
+DELETE {{baseUrl}}/reminders/{{reminderId}}
+Authorization: Bearer {{accessToken}}

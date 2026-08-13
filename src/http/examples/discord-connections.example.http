@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3000/api
+
+### ========================================
+### Connect Discord Account
+### ========================================
+
+POST {{baseUrl}}/discord/connections
+Content-Type: application/json
+
+{
+    "code": "dummy-discord-oauth-code",
+    "guildId": "123456789012345678"
+}
+
+###
+
+### ========================================
+### Get Connected Discord Account
+### ========================================
+
+GET {{baseUrl}}/discord/connections
+
+###
+
+### ========================================
+### Update Selected Discord Channel
+### ========================================
+
+PATCH {{baseUrl}}/discord/connections/channel
+Content-Type: application/json
+
+{
+    "channelId": "1526984364360208435"
+}
+
+###
+
+### ========================================
+### Disconnect Discord Account
+### ========================================
+
+DELETE {{baseUrl}}/discord/connections
