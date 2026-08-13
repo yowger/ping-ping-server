@@ -1,10 +1,3 @@
-Yeah — now is a good time to make the README, especially since your app already has a clear architecture: **Express + TypeScript + PostgreSQL + Drizzle + Redis + BullMQ + Discord.js + Better Auth**.
-
-I would **not** start with a huge README. Start with a clean developer-focused one, then expand it.
-
-## Recommended README structure
-
-````md
 # Ping Ping
 
 A Discord reminder service that lets users connect their Discord account,
