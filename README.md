@@ -301,3 +301,4 @@ The reminder is persisted in PostgreSQL and scheduled through BullMQ.
 - [ ] Reminder recurrence
 - [ ] Reminder templates
 - [ ] Interactive Discord buttons
+- [ ] client side
